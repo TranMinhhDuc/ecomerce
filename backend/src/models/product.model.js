@@ -10,13 +10,6 @@ const productSchema = new mongoose.Schema({
         maxLength: [50, "Name cannot exceed 50 characters"],
     },
 
-    brand: {
-        type: String,
-        required: [true, "Brand is required"],
-        trim: true,
-        maxLength: [50, "Brand cannot exceed 50 characters"],
-    },
-
     variant: [ variantSchema ],
 
     description: {

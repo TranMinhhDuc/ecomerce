@@ -31,7 +31,7 @@ export const signUp = async (req, res, next) => {
         await session.commitTransaction();
         await session.endSession();
 
-        return res.status(201).json({
+        res.status(201).json({
             success: true,
             message: "User is created successfully",
             data: {
@@ -52,13 +52,21 @@ export const signIn = async (req, res, next) => {
 
         const user = await User.findOne({ email });
         if(!user) {
-            const error = new Error('Can\'t find this email');
+            const error = new Error('Email or password is incorrect');
             error.statusCode = 404;
-            throw(error);
+            throw error;
+        }
+
+        const isMatchPassword = await bcrypt.compare(password, user.password); 
+
+        if(!isMatchPassword) {
+            const error = new Error('Email or password is incorrect');
+            error.statusCode = 401;
+            throw error;
         }
 
         const token = generateToken(user._id);
-        return res.status(200).json({
+        res.status(200).json({
             success: true,
             message: 'Login successfully',
             token,
@@ -67,4 +75,12 @@ export const signIn = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+};
+
+export const resetPassword = async (req, res, next) => {
+
+};
+
+export const forgetPassword = async (req, res, next) => {
+
 };
